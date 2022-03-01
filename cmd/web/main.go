@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/techarm/go-bookings/pkg/handler"
+	"github.com/techarm/go-bookings/pkg/handlers"
 	"log"
 	"net/http"
 )
@@ -9,8 +9,8 @@ import (
 const port = ":8080"
 
 func main() {
-	http.HandleFunc("/", handler.Home)
-	http.HandleFunc("/about", handler.About)
+	http.HandleFunc("/", handlers.Home)
+	http.HandleFunc("/about", handlers.About)
 
 	log.Println("start server and listen on", port)
 	err := http.ListenAndServe(port, nil)
