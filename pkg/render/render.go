@@ -3,6 +3,7 @@ package render
 import (
 	"bytes"
 	"github.com/techarm/go-bookings/pkg/config"
+	"github.com/techarm/go-bookings/pkg/models"
 	"html/template"
 	"log"
 	"net/http"
@@ -19,7 +20,7 @@ func NewTemplate(a *config.AppConfig) {
 }
 
 // Execute html/templateを使い、テンプレートファイルをレンダリング
-func Execute(w http.ResponseWriter, name string) {
+func Execute(w http.ResponseWriter, name string, td *models.TemplateData) {
 	var tc map[string]*template.Template
 
 	if app.UseCache {
@@ -30,18 +31,18 @@ func Execute(w http.ResponseWriter, name string) {
 
 	t, ok := tc[name]
 	if !ok {
-		log.Fatalln("テンプレートキャッシュに対象データが存在しません", name)
+		log.Fatalln("テンプレートキャッシュに対象データが存在しません: ", name)
 	}
 
 	buf := new(bytes.Buffer)
-	err := t.Execute(buf, nil)
+	err := t.Execute(buf, td)
 	if err != nil {
-		log.Fatalln("テンプレートのbuffer書き込み失敗しました", err)
+		log.Fatalln("テンプレートのbuffer書き込み失敗しました: ", err)
 	}
 
 	_, err = buf.WriteTo(w)
 	if err != nil {
-		log.Fatalln("テンプレートの応答データ書き込み失敗しました", err)
+		log.Fatalln("テンプレートの応答データ書き込み失敗しました: ", err)
 	}
 }
 

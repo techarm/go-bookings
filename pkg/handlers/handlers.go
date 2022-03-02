@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/techarm/go-bookings/pkg/config"
+	"github.com/techarm/go-bookings/pkg/models"
 	"github.com/techarm/go-bookings/pkg/render"
 	"net/http"
 )
@@ -26,10 +27,15 @@ func NewHandlers(r *Repository) {
 
 // Home 画面ハンドラー
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, "home.page.html")
+	stringMap := make(map[string]string)
+	stringMap["message"] = "こんにちは！"
+
+	render.Execute(w, "home.page.html", &models.TemplateData{
+		StringMap: stringMap,
+	})
 }
 
 // About 画面ハンドラー
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, "about.page.html")
+	render.Execute(w, "about.page.html", &models.TemplateData{})
 }
