@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"github.com/techarm/go-bookings/pkg/config"
 	"html/template"
 	"log"
 	"net/http"
@@ -10,20 +11,30 @@ import (
 
 var functions = template.FuncMap{}
 
-// NewTemplate html/templateを使い、テンプレートファイルをレンダリング
-func NewTemplate(w http.ResponseWriter, name string) {
-	cache, err := CreateTemplateCache()
-	if err != nil {
-		log.Fatal("テンプレートキャッシュ処理実行失敗しました", err)
+var app *config.AppConfig
+
+// NewTemplate 設置初期化
+func NewTemplate(a *config.AppConfig) {
+	app = a
+}
+
+// Execute html/templateを使い、テンプレートファイルをレンダリング
+func Execute(w http.ResponseWriter, name string) {
+	var tc map[string]*template.Template
+
+	if app.UseCache {
+		tc = app.TemplateCache
+	} else {
+		tc, _ = CreateTemplateCache()
 	}
 
-	t, ok := cache[name]
+	t, ok := tc[name]
 	if !ok {
-		log.Fatalln("テンプレートキャッシュに対象データが存在しません", err)
+		log.Fatalln("テンプレートキャッシュに対象データが存在しません", name)
 	}
 
 	buf := new(bytes.Buffer)
-	err = t.Execute(buf, nil)
+	err := t.Execute(buf, nil)
 	if err != nil {
 		log.Fatalln("テンプレートのbuffer書き込み失敗しました", err)
 	}
