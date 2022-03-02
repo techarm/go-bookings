@@ -1,31 +1,41 @@
 package render
 
 import (
+	"bytes"
 	"html/template"
 	"log"
 	"net/http"
 	"path/filepath"
 )
 
-var functions = template.FuncMap {}
+var functions = template.FuncMap{}
 
-func Render(w http.ResponseWriter, name string) {
-	cache, err := createTemplateCache()
+// NewTemplate html/templateを使い、テンプレートファイルをレンダリング
+func NewTemplate(w http.ResponseWriter, name string) {
+	cache, err := CreateTemplateCache()
 	if err != nil {
-		log.Fatal("Error getting template cache", err)
+		log.Fatal("テンプレートキャッシュ処理実行失敗しました", err)
 	}
 
 	t, ok := cache[name]
 	if !ok {
-		log.Fatalln("Can not parse template file", err)
+		log.Fatalln("テンプレートキャッシュに対象データが存在しません", err)
 	}
-	err = t.Execute(w, nil)
+
+	buf := new(bytes.Buffer)
+	err = t.Execute(buf, nil)
 	if err != nil {
-		log.Fatalln("Can not execute template file", err)
+		log.Fatalln("テンプレートのbuffer書き込み失敗しました", err)
+	}
+
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		log.Fatalln("テンプレートの応答データ書き込み失敗しました", err)
 	}
 }
 
-func createTemplateCache() (map[string]*template.Template, error) {
+// CreateTemplateCache テンプレートのキャッシュマップを作成
+func CreateTemplateCache() (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 
 	pages, err := filepath.Glob("./templates/*.page.html")
