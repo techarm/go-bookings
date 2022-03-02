@@ -19,6 +19,11 @@ func NewTemplate(a *config.AppConfig) {
 	app = a
 }
 
+// AddDefaultData ディフォルトデータを設定する
+func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+	return td
+}
+
 // Execute html/templateを使い、テンプレートファイルをレンダリング
 func Execute(w http.ResponseWriter, name string, td *models.TemplateData) {
 	var tc map[string]*template.Template
@@ -35,6 +40,8 @@ func Execute(w http.ResponseWriter, name string, td *models.TemplateData) {
 	}
 
 	buf := new(bytes.Buffer)
+
+	td = AddDefaultData(td)
 	err := t.Execute(buf, td)
 	if err != nil {
 		log.Fatalln("テンプレートのbuffer書き込み失敗しました: ", err)
