@@ -31,7 +31,12 @@ func main() {
 	http.HandleFunc("/about", handlers.Repo.About)
 
 	log.Println("start server and listen on", port)
-	err = http.ListenAndServe(port, nil)
+	srv := &http.Server{
+		Addr:    port,
+		Handler: routers(app),
+	}
+
+	err = srv.ListenAndServe()
 	if err != nil {
 		log.Fatalln("サーバーが起動できませんでした。", err)
 	}
