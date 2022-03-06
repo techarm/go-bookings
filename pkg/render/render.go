@@ -57,7 +57,7 @@ func Execute(w http.ResponseWriter, name string, td *models.TemplateData) {
 func CreateTemplateCache() (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 
-	pages, err := filepath.Glob("./templates/*.page.html")
+	pages, err := filepath.Glob("./templates/*.page.tmpl")
 	if err != nil {
 		return cache, err
 	}
@@ -69,13 +69,13 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 			return cache, err
 		}
 
-		match, err := filepath.Glob("./templates/*.layout.html")
+		match, err := filepath.Glob("./templates/*.layout.tmpl")
 		if err != nil {
 			return cache, err
 		}
 
 		if len(match) > 0 {
-			t, err = t.ParseGlob("./templates/*.layout.html")
+			t, err = t.ParseGlob("./templates/*.layout.tmpl")
 			if err != nil {
 				return cache, err
 			}
