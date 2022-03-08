@@ -1,6 +1,14 @@
 {{ template "base" . }}
 
 {{ define "content" }}
-    <h1>This is a home page.</h1>
-    <p> {{ index .StringMap "message" }} {{ index .StringMap "remote_ip" }}</p>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>This is a home page.</h1>
+                <div class="alert alert-success" role="alert">
+                    {{ index .StringMap "message" }} {{ index .StringMap "remote_ip" }}
+                </div>
+            </div>
+        </div>
+    </div>
 {{ end }}
