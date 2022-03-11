@@ -47,3 +47,23 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 		StringMap: stringMap,
 	})
 }
+
+// GeneralsQuarters 画面ハンドラー
+func (m *Repository) GeneralsQuarters(w http.ResponseWriter, r *http.Request) {
+	render.Execute(w, "rooms-generals.page.tmpl", &models.TemplateData{})
+}
+
+// MajorsSuite 画面ハンドラー
+func (m *Repository) MajorsSuite(w http.ResponseWriter, r *http.Request) {
+	render.Execute(w, "rooms-majors.page.tmpl", &models.TemplateData{})
+}
+
+// MakeReservation 画面ハンドラー
+func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
+	render.Execute(w, "reservation.page.tmpl", &models.TemplateData{})
+}
+
+// Contact 画面ハンドラー
+func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
+	render.Execute(w, "contact.page.tmpl", &models.TemplateData{})
+}

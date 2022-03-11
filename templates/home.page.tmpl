@@ -1,50 +1,7 @@
 {{ template "base" . }}
 
 {{ define "content" }}
-    <style>
-        .my-footer {
-            height: 5em;
-            background-color: #163b65;
-            margin-top: 1.5em;
-            padding: 1em;
-            color: white;
-            font-size: 80%;
-        }
-    </style>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar scroll</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarScroll">
-                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Rooms
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                            <li><a class="dropdown-item" href="#">General's Quarters</a></li>
-                            <li><a class="dropdown-item" href="#">Major's Suite</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/make-reservation">Book Now</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled">Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div id="main-carousel" class="carousel slide" data-bs-ride="carousel">
+    <div id="main-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#main-carousel" data-bs-slide-to="0" class="active"></button>
             <button type="button" data-bs-target="#main-carousel" data-bs-slide-to="1"></button>
@@ -102,18 +59,4 @@
             </div>
         </div>
     </div>
-
-    <footer class="my-footer">
-        <div class="row">
-            <div class="col">
-                Left Side
-            </div>
-            <div class="col">
-                Center Side
-            </div>
-            <div class="col">
-                Right Side
-            </div>
-        </div>
-    </footer>
 {{ end }}
