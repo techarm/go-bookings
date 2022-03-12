@@ -5,16 +5,12 @@
             <div class="col-md-6 offset-md-3">
                 <h1 class="mb-3">現在予約の空き状況確認</h1>
                 <form action="/reservation" method="GET" class="needs-validation" novalidate>
-                    <div class="row mb-3">
+                    <div class="row mb-3" id="reservation-date">
                         <div class="col">
-                            <label for="start-date" class="form-label">開始日</label>
-                            <input type="date" class="form-control" id="start-date" aria-describedby="start-date" required>
-                            <div id="start-date-help" class="form-text">予約開始日付を入力してください</div>
+                            <input type="text" class="form-control" id="start-date" name="start" placeholder="開始日" required>
                         </div>
                         <div class="col">
-                            <label for="end-date" class="form-label">終了日</label>
-                            <input type="date" class="form-control" id="end-date" aria-describedby="end-date" required>
-                            <div id="end-date-help" class="form-text">予約終了日付を入力してください</div>
+                            <input type="text" class="form-control" id="end-date" name="end" placeholder="終了日" required>
                         </div>
                     </div>
                     <div class="row">
@@ -26,4 +22,13 @@
             </div>
         </div>
     </div>
+{{ end }}
+{{ define "javascript" }}
+<script type="text/javascript">
+    const elem = document.getElementById('reservation-date');
+    const rangepicker = new DateRangePicker(elem, {
+        format: "yyyy/mm/dd",
+        language: "ja"
+    });
+</script>
 {{ end }}
