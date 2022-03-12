@@ -58,9 +58,14 @@ func (m *Repository) MajorsSuite(w http.ResponseWriter, r *http.Request) {
 	render.Execute(w, "rooms-majors.page.tmpl", &models.TemplateData{})
 }
 
+// SearchReservation 画面ハンドラー
+func (m *Repository) SearchReservation(w http.ResponseWriter, r *http.Request) {
+	render.Execute(w, "reservation.page.tmpl", &models.TemplateData{})
+}
+
 // MakeReservation 画面ハンドラー
 func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, "reservation.page.tmpl", &models.TemplateData{})
+	render.Execute(w, "make-reservation.page.tmpl", &models.TemplateData{})
 }
 
 // Contact 画面ハンドラー
