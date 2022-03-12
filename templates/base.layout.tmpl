@@ -12,23 +12,18 @@
     <!-- vanillaJs-datepicker CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/css/datepicker-bs5.min.css">
 
-    <title>Document</title>
+    <!-- notie CSS -->
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
 
-    <style>
-        .my-footer {
-            height: 5em;
-            background-color: #163b65;
-            margin-top: 1.5em;
-            padding: 1em;
-            color: white;
-            font-size: 80%;
-        }
-    </style>
+    <!-- custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+
+    <title>TeCharmホテル予約システム</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar scroll</a>
+        <a class="navbar-brand" href="#">TeCharmホテル</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -50,10 +45,10 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/make-reservation">Book Now</a>
+                    <a class="nav-link" href="/search-availability">Book Now</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled">Contact</a>
+                    <a class="nav-link" href="/contact">Contact</a>
                 </li>
             </ul>
         </div>
@@ -88,6 +83,12 @@
 <!-- vanillaJs-datepicker -->
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/js/datepicker-full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/js/locales/ja.js"></script>
+
+<!-- notie -->
+<script src="https://unpkg.com/notie"></script>
+
+<!-- sweetalert2 -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script type="text/javascript">
     // Example starter JavaScript for disabling form submissions if there are invalid fields

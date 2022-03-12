@@ -2,12 +2,4 @@
 
 {{ define "content" }}
     <h1>This is an about page!</h1>
-
-    <p>
-        {{ if ne (index .StringMap "remote_ip") "" }}
-            あなたのIPアドレスは {{ index .StringMap "remote_ip" }} です。
-        {{ else }}
-            IPアドレスが取得できませんでした。<a href="/">Home Page</a>をアクセスしたら、値を取得できます。
-        {{ end }}
-    </p>
 {{ end }}

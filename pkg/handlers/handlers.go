@@ -25,7 +25,7 @@ func NewHandlers(r *Repository) {
 	Repo = r
 }
 
-// Home 画面ハンドラー
+// Home Home画面の表示処理
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	remoteIP := r.RemoteAddr
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
@@ -39,7 +39,7 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// About 画面ハンドラー
+// About About画面の表示処理
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	stringMap := make(map[string]string)
 	stringMap["remote_ip"] = m.App.Session.GetString(r.Context(), "remote_ip")
@@ -48,27 +48,27 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// GeneralsQuarters 画面ハンドラー
+// GeneralsQuarters GeneralsQuarters画面の表示処理
 func (m *Repository) GeneralsQuarters(w http.ResponseWriter, r *http.Request) {
 	render.Execute(w, "rooms-generals.page.tmpl", &models.TemplateData{})
 }
 
-// MajorsSuite 画面ハンドラー
+// MajorsSuite MajorsSuite画面の表示処理
 func (m *Repository) MajorsSuite(w http.ResponseWriter, r *http.Request) {
 	render.Execute(w, "rooms-majors.page.tmpl", &models.TemplateData{})
 }
 
-// SearchReservation 画面ハンドラー
-func (m *Repository) SearchReservation(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, "reservation.page.tmpl", &models.TemplateData{})
+// SearchAvailability 予約状況検索画面の表示処理
+func (m *Repository) SearchAvailability(w http.ResponseWriter, r *http.Request) {
+	render.Execute(w, "search-availability.page.tmpl", &models.TemplateData{})
 }
 
-// MakeReservation 画面ハンドラー
+// MakeReservation 予約画面の表示処理
 func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
 	render.Execute(w, "make-reservation.page.tmpl", &models.TemplateData{})
 }
 
-// Contact 画面ハンドラー
+// Contact 連絡画面の表示処理
 func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
 	render.Execute(w, "contact.page.tmpl", &models.TemplateData{})
 }
