@@ -38,10 +38,10 @@
                 <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
                     <div id="reservation-dates-modal">
                         <div class="mb-3">
-                            <input type="text" name="start" id="start" class="form-control" placeholder="開始日" disabled required autocomplete="off">
+                            <input type="text" name="start" id="start" class="form-control" placeholder="開始日" required autocomplete="off">
                         </div>
                         <div>
-                            <input type="text" name="end" id="end" class="form-control" placeholder="終了日" disabled required autocomplete="off" >
+                            <input type="text" name="end" id="end" class="form-control" placeholder="終了日" required autocomplete="off" >
                         </div>
                     </div>
                 </form>
@@ -49,18 +49,13 @@
             attention.custom({
                 title: '日付を選択してください',
                 msg: html,
-                willOpen: () => {
+                didOpen: () => {
                     const elem = document.getElementById("reservation-dates-modal");
                     const rangepicker = new DateRangePicker(elem, {
                         format: "yyyy/mm/dd",
                         language: "ja",
-                        showOnFocus: true,
                         orientation: "auto top"
                     });
-                },
-                didOpen: () => {
-                    document.getElementById("start").removeAttribute("disabled");
-                    document.getElementById("end").removeAttribute("disabled");
                 },
                 callback: function(result) {
                     if (result) {

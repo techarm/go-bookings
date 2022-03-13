@@ -122,7 +122,7 @@ function Prompt() {
 
         if (result) {
             if (result.dismiss !== Swal.DismissReason.cancel) {
-                if (result.value !== undefined && result.value !== "") {
+                if (result.value !== "") {
                     if (c.callback !== undefined) {
                         c.callback(result);
                     }
