@@ -24,8 +24,62 @@
     </div>
     <div class="row">
         <div class="col text-center">
-            <a href="/check-availability" class="btn btn-success">Check Availability</a>
+            <button type="button" id="check-availability-button" class="btn btn-success">予約状態確認</button>
         </div>
     </div>
 </div>
+{{ end }}
+
+{{ define "javascript" }}
+    <script>
+        let attention = new Prompt();
+        document.getElementById("check-availability-button").addEventListener("click", function () {
+            let html = `
+                <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
+                    <div id="reservation-dates-modal">
+                        <div class="mb-3">
+                            <input type="text" name="start" id="start" class="form-control" placeholder="開始日" disabled required autocomplete="off">
+                        </div>
+                        <div>
+                            <input type="text" name="end" id="end" class="form-control" placeholder="終了日" disabled required autocomplete="off" >
+                        </div>
+                    </div>
+                </form>
+                `;
+            attention.custom({
+                title: '日付を選択してください',
+                msg: html,
+                willOpen: () => {
+                    const elem = document.getElementById("reservation-dates-modal");
+                    const rangepicker = new DateRangePicker(elem, {
+                        format: "yyyy/mm/dd",
+                        language: "ja",
+                        showOnFocus: true,
+                        orientation: "auto top"
+                    });
+                },
+                didOpen: () => {
+                    document.getElementById("start").removeAttribute("disabled");
+                    document.getElementById("end").removeAttribute("disabled");
+                },
+                callback: function(result) {
+                    if (result) {
+                        let form = document.getElementById("check-availability-form");
+                        let formData = new FormData(form);
+                        formData.append("csrf_token", "{{.CSRFToken}}");
+
+                        fetch('/search-availability-json', {
+                            method: "post",
+                            body: formData,
+                        }).then(response => response.json())
+                            .then(data => {
+                                console.log(data);
+                                console.log(data.ok);
+                                console.log(data.message);
+                            });
+                    }
+                }
+            });
+        })
+    </script>
 {{ end }}

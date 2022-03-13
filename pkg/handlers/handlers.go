@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"encoding/json"
 	"github.com/techarm/go-bookings/pkg/config"
 	"github.com/techarm/go-bookings/pkg/models"
 	"github.com/techarm/go-bookings/pkg/render"
+	"log"
 	"net/http"
 )
 
@@ -66,6 +68,27 @@ func (m *Repository) SearchAvailability(w http.ResponseWriter, r *http.Request) 
 // PostSearchAvailability 予約状況検索画面のPOST処理
 func (m *Repository) PostSearchAvailability(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("post data from form"))
+}
+
+type jsonResponse struct {
+	OK      bool   `json:"ok"`
+	Message string `json:"message"`
+}
+
+// SearchAvailabilityJSON 予約状況検索画面のAPI処理
+func (m *Repository) SearchAvailabilityJSON(w http.ResponseWriter, r *http.Request) {
+	response := &jsonResponse{
+		OK:      false,
+		Message: "Available!",
+	}
+
+	jsonText, err := json.MarshalIndent(response, "", "    ")
+	if err != nil {
+		log.Println("JSONシリアライズ失敗", err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonText)
 }
 
 // MakeReservation 予約画面の表示処理
