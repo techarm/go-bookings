@@ -1,10 +1,10 @@
-{{ template "base" }}
+{{ template "base" . }}
 {{ define "content" }}
     <div class="container">
         <div class="row mt-5">
             <div class="col-md-6 offset-md-3">
                 <h1 class="mb-3">現在予約の空き状況確認</h1>
-                <form action="/reservation" method="GET" class="needs-validation" novalidate>
+                <form action="/search-availability" method="post" class="needs-validation" novalidate>
                     <div class="row mb-3" id="reservation-date">
                         <div class="col">
                             <input type="text" class="form-control" id="start-date" name="start" placeholder="開始日" required>
@@ -18,6 +18,7 @@
                             <button type="submit" class="btn btn-primary px-5" id="search">検索</button>
                         </div>
                     </div>
+                    <input type="hidden" name="csrf_token" value="{{ .CSRFToken }}">
                 </form>
             </div>
         </div>

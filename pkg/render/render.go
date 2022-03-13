@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"github.com/justinas/nosurf"
 	"github.com/techarm/go-bookings/pkg/config"
 	"github.com/techarm/go-bookings/pkg/models"
 	"html/template"
@@ -20,12 +21,13 @@ func NewTemplate(a *config.AppConfig) {
 }
 
 // AddDefaultData ディフォルトデータを設定する
-func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+func AddDefaultData(r *http.Request, td *models.TemplateData) *models.TemplateData {
+	td.CSRFToken = nosurf.Token(r)
 	return td
 }
 
 // Execute html/templateを使い、テンプレートファイルをレンダリング
-func Execute(w http.ResponseWriter, name string, td *models.TemplateData) {
+func Execute(w http.ResponseWriter, r *http.Request, name string, td *models.TemplateData) {
 	var tc map[string]*template.Template
 
 	if app.UseCache {
@@ -41,7 +43,7 @@ func Execute(w http.ResponseWriter, name string, td *models.TemplateData) {
 
 	buf := new(bytes.Buffer)
 
-	td = AddDefaultData(td)
+	td = AddDefaultData(r, td)
 	err := t.Execute(buf, td)
 	if err != nil {
 		log.Fatalln("テンプレートのbuffer書き込み失敗しました: ", err)

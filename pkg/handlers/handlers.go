@@ -34,7 +34,7 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	stringMap["message"] = "こんにちは！"
 	stringMap["remote_ip"] = remoteIP
 
-	render.Execute(w, "home.page.tmpl", &models.TemplateData{
+	render.Execute(w, r, "home.page.tmpl", &models.TemplateData{
 		StringMap: stringMap,
 	})
 }
@@ -43,32 +43,37 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	stringMap := make(map[string]string)
 	stringMap["remote_ip"] = m.App.Session.GetString(r.Context(), "remote_ip")
-	render.Execute(w, "about.page.tmpl", &models.TemplateData{
+	render.Execute(w, r, "about.page.tmpl", &models.TemplateData{
 		StringMap: stringMap,
 	})
 }
 
 // GeneralsQuarters GeneralsQuarters画面の表示処理
 func (m *Repository) GeneralsQuarters(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, "rooms-generals.page.tmpl", &models.TemplateData{})
+	render.Execute(w, r, "rooms-generals.page.tmpl", &models.TemplateData{})
 }
 
 // MajorsSuite MajorsSuite画面の表示処理
 func (m *Repository) MajorsSuite(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, "rooms-majors.page.tmpl", &models.TemplateData{})
+	render.Execute(w, r, "rooms-majors.page.tmpl", &models.TemplateData{})
 }
 
 // SearchAvailability 予約状況検索画面の表示処理
 func (m *Repository) SearchAvailability(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, "search-availability.page.tmpl", &models.TemplateData{})
+	render.Execute(w, r, "search-availability.page.tmpl", &models.TemplateData{})
+}
+
+// PostSearchAvailability 予約状況検索画面のPOST処理
+func (m *Repository) PostSearchAvailability(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("post data from form"))
 }
 
 // MakeReservation 予約画面の表示処理
 func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, "make-reservation.page.tmpl", &models.TemplateData{})
+	render.Execute(w, r, "make-reservation.page.tmpl", &models.TemplateData{})
 }
 
 // Contact 連絡画面の表示処理
 func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, "contact.page.tmpl", &models.TemplateData{})
+	render.Execute(w, r, "contact.page.tmpl", &models.TemplateData{})
 }
