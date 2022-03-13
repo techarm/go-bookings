@@ -3,8 +3,8 @@ package render
 import (
 	"bytes"
 	"github.com/justinas/nosurf"
-	"github.com/techarm/go-bookings/pkg/config"
-	"github.com/techarm/go-bookings/pkg/models"
+	"github.com/techarm/go-bookings/internal/config"
+	"github.com/techarm/go-bookings/internal/models"
 	"html/template"
 	"log"
 	"net/http"

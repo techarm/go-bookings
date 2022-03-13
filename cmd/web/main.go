@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/alexedwards/scs/v2"
-	"github.com/techarm/go-bookings/pkg/config"
-	"github.com/techarm/go-bookings/pkg/handlers"
-	"github.com/techarm/go-bookings/pkg/render"
+	"github.com/techarm/go-bookings/internal/config"
+	"github.com/techarm/go-bookings/internal/handlers"
+	"github.com/techarm/go-bookings/internal/render"
 	"log"
 	"net/http"
 	"time"

@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/techarm/go-bookings/pkg/config"
-	"github.com/techarm/go-bookings/pkg/models"
-	"github.com/techarm/go-bookings/pkg/render"
+	"github.com/techarm/go-bookings/internal/config"
+	"github.com/techarm/go-bookings/internal/models"
+	"github.com/techarm/go-bookings/internal/render"
 	"log"
 	"net/http"
 )
