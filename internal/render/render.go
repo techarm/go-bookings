@@ -46,12 +46,14 @@ func Execute(w http.ResponseWriter, r *http.Request, name string, td *models.Tem
 	td = AddDefaultData(r, td)
 	err := t.Execute(buf, td)
 	if err != nil {
-		log.Fatalln("テンプレートのbuffer書き込み失敗しました: ", err)
+		log.Println("テンプレートのbuffer書き込み失敗しました: ", err)
+		return
 	}
 
 	_, err = buf.WriteTo(w)
 	if err != nil {
-		log.Fatalln("テンプレートの応答データ書き込み失敗しました: ", err)
+		log.Println("テンプレートの応答データ書き込み失敗しました: ", err)
+		return
 	}
 }
 

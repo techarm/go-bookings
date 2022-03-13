@@ -4,28 +4,33 @@
         <div class="row mt-3">
             <div class="col-md-6 offset-md-3">
                 <h1 class="text-center">予約</h1>
-                <form action="/make-reservation" method="post" class="needs-validation" novalidate>
-                    <div>
-                        <label for="name" class="form-label">氏名</label>
-                        <input type="text" class="form-control" id="name" required>
+                <!--needs-validation -->
+                {{ $res := index .Data "reservation" }}
+                <form action="/make-reservation" method="post" class="" novalidate>
+                    <div class="mb-3">
+                        <label for="user_name" class="form-label">氏名</label>
+                        <input type="text" class="form-control {{ with .Form.Errors.Get "user_name" }}is-invalid{{ end }}"
+                               id="user_name" name="user_name" autocomplete="off" value="{{$res.UserName}}" required>
+                        <div class="invalid-feedback">{{ .Form.Errors.Get "user_name" }}</div>
                     </div>
-                    <div>
+                    <div class="mb-3">
                         <label for="email" class="form-label">メールアドレス</label>
-                        <input type="email" class="form-control" id="email" required>
+                        <input type="email" class="form-control {{ with .Form.Errors.Get "email" }}is-invalid{{ end }}"
+                               id="email" name="email" value="{{$res.Email}}" required>
+                        <div class="invalid-feedback">{{ .Form.Errors.Get "email" }}</div>
                     </div>
                     <div>
-                        <label for="phone-number" class="form-label">電話番号</label>
-                        <input type="text" class="form-control" id="phone-number" required>
-                    </div>
-                    <div>
-                        <label for="date" class="form-label">予約日</label>
-                        <input type="date" class="form-control" id="date" required>
+                        <label for="phone_number" class="form-label">電話番号</label>
+                        <input type="text" class="form-control {{ with .Form.Errors.Get "phone_number" }}is-invalid{{ end }}"
+                               id="phone_number" name="phone_number" value="{{$res.PhoneNumber}}" required>
+                        <div class="invalid-feedback">{{ .Form.Errors.Get "phone_number" }}</div>
                     </div>
                     <div class="row mt-3">
                         <div class="col text-center">
-                            <button type="submit" class="btn btn-primary px-5">検索</button>
+                            <button type="submit" class="btn btn-primary px-5">登録</button>
                         </div>
                     </div>
+                    <input type="hidden" name="csrf_token" value="{{ .CSRFToken }}">
                 </form>
             </div>
         </div>

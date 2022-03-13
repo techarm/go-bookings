@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/techarm/go-bookings/internal/config"
+	"github.com/techarm/go-bookings/internal/forms"
 	"github.com/techarm/go-bookings/internal/models"
 	"github.com/techarm/go-bookings/internal/render"
 	"log"
@@ -93,7 +94,51 @@ func (m *Repository) SearchAvailabilityJSON(w http.ResponseWriter, r *http.Reque
 
 // MakeReservation 予約画面の表示処理
 func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, r, "make-reservation.page.tmpl", &models.TemplateData{})
+	var emptyReservation models.Reservation
+	data := make(map[string]interface{})
+	data["reservation"] = emptyReservation
+
+	render.Execute(w, r, "make-reservation.page.tmpl", &models.TemplateData{
+		Form: forms.New(nil),
+		Data: data,
+	})
+}
+
+// PostMakeReservation 予約画面の登録処理
+func (m *Repository) PostMakeReservation(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	reservation := models.Reservation{
+		UserName:    r.Form.Get("user_name"),
+		Email:       r.Form.Get("email"),
+		PhoneNumber: r.Form.Get("phone_number"),
+	}
+
+	form := forms.New(r.PostForm)
+	form.Required("user_name", "email", "phone_number")
+	form.MinLength("user_name", 3, r)
+	form.IsEmail("email")
+
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["reservation"] = reservation
+		render.Execute(w, r, "make-reservation.page.tmpl", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+		return
+	}
+
+	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
+}
+
+// ReservationSummary 予約内容確認画面表示処理
+func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) {
+	render.Execute(w, r, "reservation-summary.page.tmpl", &models.TemplateData{})
 }
 
 // Contact 連絡画面の表示処理
