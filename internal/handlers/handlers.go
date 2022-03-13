@@ -133,12 +133,28 @@ func (m *Repository) PostMakeReservation(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	m.App.Session.Put(r.Context(), "reservation", reservation)
 	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 }
 
 // ReservationSummary 予約内容確認画面表示処理
 func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, r, "reservation-summary.page.tmpl", &models.TemplateData{})
+	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
+	if !ok {
+		log.Println("セッションから予約情報が取得できません")
+		m.App.Session.Put(r.Context(), "error", "セッション情報取得失敗しました、最初からやり直ししてください。")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
+	m.App.Session.Remove(r.Context(), "reservation")
+
+	data := make(map[string]interface{})
+	data["reservation"] = reservation
+
+	render.Execute(w, r, "reservation-summary.page.tmpl", &models.TemplateData{
+		Data: data,
+	})
 }
 
 // Contact 連絡画面の表示処理

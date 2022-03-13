@@ -93,7 +93,19 @@
 
 <!-- custom javascript -->
 <script src="/static/js/main.js"></script>
+<script type="text/javascript">
+    {{ with .Error }}
+        notify("{{ . }}", "error")
+    {{ end }}
 
+    {{ with .Info }}
+        notify("{{ . }}", "success")
+    {{ end }}
+
+    {{ with .Warning }}
+        notify("{{ . }}", "warning")
+    {{ end }}
+</script>
 {{ block "javascript" . }}
 {{ end }}
 </body>

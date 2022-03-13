@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/gob"
 	"github.com/alexedwards/scs/v2"
 	"github.com/techarm/go-bookings/internal/config"
 	"github.com/techarm/go-bookings/internal/handlers"
+	"github.com/techarm/go-bookings/internal/models"
 	"github.com/techarm/go-bookings/internal/render"
 	"log"
 	"net/http"
@@ -16,6 +18,9 @@ var app *config.AppConfig
 var session *scs.SessionManager
 
 func main() {
+
+	// セッション情報モデル登録
+	gob.Register(models.Reservation{})
 
 	app = &config.AppConfig{
 		UseCache:     false,

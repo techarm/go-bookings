@@ -1,5 +1,40 @@
 {{ template "base" . }}
 
 {{ define "content" }}
-    <h1>This is a summary page!</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center mt-3">予約情報確認</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 offset-md-3 mt-3">
+                {{$res := index .Data "reservation" }}
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>氏名</th>
+                            <td>{{ $res.UserName }}</td>
+                        </tr>
+                        <tr>
+                            <th>予約開始日</th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>予約終了日</th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>メールアドレス</th>
+                            <td>{{ $res.Email }}</td>
+                        </tr>
+                        <tr>
+                            <th>電話番号</th>
+                            <td>{{ $res.PhoneNumber }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {{ end }}

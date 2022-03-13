@@ -22,6 +22,9 @@ func NewTemplate(a *config.AppConfig) {
 
 // AddDefaultData ディフォルトデータを設定する
 func AddDefaultData(r *http.Request, td *models.TemplateData) *models.TemplateData {
+	td.Info = app.Session.PopString(r.Context(), "info")
+	td.Warning = app.Session.PopString(r.Context(), "warning")
+	td.Error = app.Session.PopString(r.Context(), "error")
 	td.CSRFToken = nosurf.Token(r)
 	return td
 }
