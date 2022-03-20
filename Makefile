@@ -11,3 +11,6 @@ run:
 
 test:
 	go test -v ./... | $(COLORIZE_PASS) | $(COLORIZE_FAIL)
+
+coverage:
+	go test ./... -coverprofile=coverage.out && go tool cover -html=coverage.out && rm -f coverage.out

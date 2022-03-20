@@ -6,6 +6,10 @@ import (
 	"testing"
 )
 
+func TestNewTemplate(t *testing.T) {
+	NewTemplate(app)
+}
+
 func TestAddDefaultData(t *testing.T) {
 	var td models.TemplateData
 
@@ -19,6 +23,47 @@ func TestAddDefaultData(t *testing.T) {
 	result := AddDefaultData(r, &td)
 	if result.Info != infoData {
 		t.Errorf("expected %s, but got %s", infoData, result.Info)
+	}
+}
+
+func TestExecute(t *testing.T) {
+	r, err := getSession()
+	if err != nil {
+		t.Error(err)
+	}
+
+	pathToTemplates = "./../../templates"
+	tc, err := CreateTemplateCache()
+	if err != nil {
+		t.Error(err)
+	}
+
+	app.UseCache = true
+	app.TemplateCache = tc
+
+	var w myWrite
+	var td models.TemplateData
+
+	err = Execute(&w, r, "home.page.tmpl", &td)
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = Execute(&w, r, "not-exist.page.tmpl", &td)
+	if err == nil {
+		t.Error(err)
+	}
+}
+
+func TestCreateTemplateCache(t *testing.T) {
+	pathToTemplates = "./../../templates"
+	tc, err := CreateTemplateCache()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(tc) == 0 {
+		t.Error("テンプレートキャッシュデータが生成できません")
 	}
 }
 
