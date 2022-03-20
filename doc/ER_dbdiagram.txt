@@ -1,0 +1,48 @@
+Table users {
+  id integer [pk, increment] // auto-increment
+  first_name varchar(255)
+  last_name varchar(255)
+  email varchar(255)
+  password varchar(255)
+  access_level integer
+  created_at timestamp
+  update_at timestamp
+}
+
+Table rooms {
+  id integer [pk, increment]
+  room_name varcharacter(255)
+  created_at timestamp
+  update_at timestamp
+}
+
+Table reservations {
+  id integer [pk, increment]
+  first_name varchar(255)
+  last_name varchar(255)
+  email varchar(255)
+  phone varchar(255)
+  start_date date
+  end_date date
+  room_id integer [ref:> rooms.id]
+  created_at timestamp
+  update_at timestamp
+}
+
+Table room_restrictions {
+  id integer [pk, increment]
+  start_date date
+  end_date date
+  room_id integer [ref:> rooms.id]
+  reservation_id integer [ref:> reservations.id]
+  restriction_id integer [ref:> restrictions.id]
+  create_at timestamp
+  update_at timestamp
+}
+
+Table restrictions {
+  id integer [pk, increment]
+  restrictions_name varchar(255)
+  create_at timestamp
+  update_at timestamp
+}

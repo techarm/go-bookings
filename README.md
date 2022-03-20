@@ -16,3 +16,6 @@ Go言語でWebアプリケーションを作成する
 - Uses [vanillajs-datepicker](https://github.com/mymth/vanillajs-datepicker)
 - Uses [notie](https://github.com/jaredreich/notie)
 - Uses [sweetalert](https://github.com/sweetalert2/sweetalert2)
+
+## データベース設計
+![ER図](doc/ER.png)
