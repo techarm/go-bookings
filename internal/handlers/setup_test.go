@@ -7,12 +7,14 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/justinas/nosurf"
+	"github.com/techarm/go-bookings/helpers"
 	"github.com/techarm/go-bookings/internal/config"
 	"github.com/techarm/go-bookings/internal/models"
 	"github.com/techarm/go-bookings/internal/render"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"time"
 )
@@ -46,10 +48,18 @@ func getRouters() http.Handler {
 	session.Cookie.Secure = app.InProduction
 	app.Session = session
 
+	// setup logger
+	infoLog := log.New(os.Stdout, "[INFO] ", log.Ldate|log.Ltime)
+	errorLog := log.New(os.Stdout, "[ERROR] ", log.Ldate|log.Ltime|log.Lshortfile)
+	app.InfoLog = infoLog
+	app.ErrorLog = errorLog
+
 	render.NewTemplate(app)
 
 	repo := NewRepository(app)
 	NewHandlers(repo)
+
+	helpers.NewHelpers(app)
 
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer)

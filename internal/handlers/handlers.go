@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"github.com/techarm/go-bookings/helpers"
 	"github.com/techarm/go-bookings/internal/config"
 	"github.com/techarm/go-bookings/internal/forms"
 	"github.com/techarm/go-bookings/internal/models"
 	"github.com/techarm/go-bookings/internal/render"
-	"log"
 	"net/http"
 )
 
@@ -30,25 +30,12 @@ func NewHandlers(r *Repository) {
 
 // Home Home画面の表示処理
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	remoteIP := r.RemoteAddr
-	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
-
-	stringMap := make(map[string]string)
-	stringMap["message"] = "こんにちは！"
-	stringMap["remote_ip"] = remoteIP
-
-	render.Execute(w, r, "home.page.tmpl", &models.TemplateData{
-		StringMap: stringMap,
-	})
+	render.Execute(w, r, "home.page.tmpl", &models.TemplateData{})
 }
 
 // About About画面の表示処理
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	stringMap := make(map[string]string)
-	stringMap["remote_ip"] = m.App.Session.GetString(r.Context(), "remote_ip")
-	render.Execute(w, r, "about.page.tmpl", &models.TemplateData{
-		StringMap: stringMap,
-	})
+	render.Execute(w, r, "about.page.tmpl", &models.TemplateData{})
 }
 
 // GeneralsQuarters GeneralsQuarters画面の表示処理
@@ -85,7 +72,8 @@ func (m *Repository) SearchAvailabilityJSON(w http.ResponseWriter, r *http.Reque
 
 	jsonText, err := json.MarshalIndent(response, "", "    ")
 	if err != nil {
-		log.Println("JSONシリアライズ失敗", err)
+		helpers.ServerError(w, err)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -108,7 +96,7 @@ func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) PostMakeReservation(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		log.Println(err)
+		helpers.ServerError(w, err)
 		return
 	}
 
@@ -141,7 +129,7 @@ func (m *Repository) PostMakeReservation(w http.ResponseWriter, r *http.Request)
 func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) {
 	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
-		log.Println("セッションから予約情報が取得できません")
+		m.App.ErrorLog.Println("セッションから予約情報が取得できません")
 		m.App.Session.Put(r.Context(), "error", "セッション情報取得失敗しました、最初からやり直ししてください。")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return

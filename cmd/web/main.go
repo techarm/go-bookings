@@ -3,12 +3,14 @@ package main
 import (
 	"encoding/gob"
 	"github.com/alexedwards/scs/v2"
+	"github.com/techarm/go-bookings/helpers"
 	"github.com/techarm/go-bookings/internal/config"
 	"github.com/techarm/go-bookings/internal/handlers"
 	"github.com/techarm/go-bookings/internal/models"
 	"github.com/techarm/go-bookings/internal/render"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -16,6 +18,8 @@ const port = ":8080"
 
 var app *config.AppConfig
 var session *scs.SessionManager
+var infoLog *log.Logger
+var errorLog *log.Logger
 
 // main アプリのメイン処理
 func main() {
@@ -62,10 +66,18 @@ func run() error {
 	session.Cookie.Secure = app.InProduction
 	app.Session = session
 
+	// setup logger
+	infoLog = log.New(os.Stdout, "[INFO] ", log.Ldate|log.Ltime)
+	errorLog = log.New(os.Stdout, "[ERROR] ", log.Ldate|log.Ltime|log.Lshortfile)
+	app.InfoLog = infoLog
+	app.ErrorLog = errorLog
+
 	render.NewTemplate(app)
 
 	repo := handlers.NewRepository(app)
 	handlers.NewHandlers(repo)
+
+	helpers.NewHelpers(app)
 
 	return nil
 }
