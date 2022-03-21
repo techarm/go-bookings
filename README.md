@@ -19,3 +19,16 @@ Go言語でWebアプリケーションを作成する
 
 ## データベース設計
 ![ER図](doc/ER.png)
+
+### マイグレーションデータベース
+- PostgreSQLクライアントツールインストール
+```
+brew install libpq
+echo 'export PATH="/usr/local/opt/libpq/bin:$PATH"' >> ~/.zshrc
+```
+
+- sodaコマンドツールインストール
+```
+go get github.com/gobuffalo/pop/...
+go install github.com/gobuffalo/pop/v6/soda@latest
+```
