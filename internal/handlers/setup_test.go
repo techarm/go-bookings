@@ -7,8 +7,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/justinas/nosurf"
-	"github.com/techarm/go-bookings/helpers"
 	"github.com/techarm/go-bookings/internal/config"
+	"github.com/techarm/go-bookings/internal/helpers"
 	"github.com/techarm/go-bookings/internal/models"
 	"github.com/techarm/go-bookings/internal/render"
 	"html/template"
@@ -56,7 +56,7 @@ func getRouters() http.Handler {
 
 	render.NewTemplate(app)
 
-	repo := NewRepository(app)
+	repo := NewRepository(app, nil)
 	NewHandlers(repo)
 
 	helpers.NewHelpers(app)

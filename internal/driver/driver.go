@@ -50,7 +50,7 @@ func testDB(d *sql.DB) error {
 
 // NewDatabase DB接続処理
 func NewDatabase(dsn string) (*sql.DB, error) {
-	db, err := sql.Open("pqx", dsn)
+	db, err := sql.Open("pgx", dsn)
 	if err != nil {
 		return nil, err
 	}

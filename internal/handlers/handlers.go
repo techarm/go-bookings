@@ -2,11 +2,14 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/techarm/go-bookings/helpers"
 	"github.com/techarm/go-bookings/internal/config"
+	"github.com/techarm/go-bookings/internal/driver"
 	"github.com/techarm/go-bookings/internal/forms"
+	"github.com/techarm/go-bookings/internal/helpers"
 	"github.com/techarm/go-bookings/internal/models"
 	"github.com/techarm/go-bookings/internal/render"
+	"github.com/techarm/go-bookings/internal/repository"
+	"github.com/techarm/go-bookings/internal/repository/dbrepo"
 	"net/http"
 )
 
@@ -14,12 +17,14 @@ var Repo *Repository
 
 type Repository struct {
 	App *config.AppConfig
+	DB  repository.DatabaseRepo
 }
 
 // NewRepository リポジトリを作成する
-func NewRepository(a *config.AppConfig) *Repository {
+func NewRepository(a *config.AppConfig, d *driver.DB) *Repository {
 	return &Repository{
 		App: a,
+		DB:  dbrepo.NewPostgresRepo(d.SQL, a),
 	}
 }
 
