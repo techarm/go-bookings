@@ -35,27 +35,27 @@ func NewHandlers(r *Repository) {
 
 // Home Home画面の表示処理
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, r, "home.page.tmpl", &models.TemplateData{})
+	render.Template(w, r, "home.page.tmpl", &models.TemplateData{})
 }
 
 // About About画面の表示処理
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, r, "about.page.tmpl", &models.TemplateData{})
+	render.Template(w, r, "about.page.tmpl", &models.TemplateData{})
 }
 
 // GeneralsQuarters GeneralsQuarters画面の表示処理
 func (m *Repository) GeneralsQuarters(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, r, "rooms-generals.page.tmpl", &models.TemplateData{})
+	render.Template(w, r, "rooms-generals.page.tmpl", &models.TemplateData{})
 }
 
 // MajorsSuite MajorsSuite画面の表示処理
 func (m *Repository) MajorsSuite(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, r, "rooms-majors.page.tmpl", &models.TemplateData{})
+	render.Template(w, r, "rooms-majors.page.tmpl", &models.TemplateData{})
 }
 
 // SearchAvailability 予約状況検索画面の表示処理
 func (m *Repository) SearchAvailability(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, r, "search-availability.page.tmpl", &models.TemplateData{})
+	render.Template(w, r, "search-availability.page.tmpl", &models.TemplateData{})
 }
 
 // PostSearchAvailability 予約状況検索画面のPOST処理
@@ -91,7 +91,7 @@ func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 	data["reservation"] = emptyReservation
 
-	render.Execute(w, r, "make-reservation.page.tmpl", &models.TemplateData{
+	render.Template(w, r, "make-reservation.page.tmpl", &models.TemplateData{
 		Form: forms.New(nil),
 		Data: data,
 	})
@@ -106,9 +106,10 @@ func (m *Repository) PostMakeReservation(w http.ResponseWriter, r *http.Request)
 	}
 
 	reservation := models.Reservation{
-		UserName:    r.Form.Get("user_name"),
-		Email:       r.Form.Get("email"),
-		PhoneNumber: r.Form.Get("phone_number"),
+		FirstName: r.Form.Get("first_name"),
+		LastName:  r.Form.Get("last_name"),
+		Email:     r.Form.Get("email"),
+		Phone:     r.Form.Get("phone"),
 	}
 
 	form := forms.New(r.PostForm)
@@ -119,7 +120,7 @@ func (m *Repository) PostMakeReservation(w http.ResponseWriter, r *http.Request)
 	if !form.Valid() {
 		data := make(map[string]interface{})
 		data["reservation"] = reservation
-		render.Execute(w, r, "make-reservation.page.tmpl", &models.TemplateData{
+		render.Template(w, r, "make-reservation.page.tmpl", &models.TemplateData{
 			Form: form,
 			Data: data,
 		})
@@ -145,12 +146,12 @@ func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) 
 	data := make(map[string]interface{})
 	data["reservation"] = reservation
 
-	render.Execute(w, r, "reservation-summary.page.tmpl", &models.TemplateData{
+	render.Template(w, r, "reservation-summary.page.tmpl", &models.TemplateData{
 		Data: data,
 	})
 }
 
 // Contact 連絡画面の表示処理
 func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
-	render.Execute(w, r, "contact.page.tmpl", &models.TemplateData{})
+	render.Template(w, r, "contact.page.tmpl", &models.TemplateData{})
 }

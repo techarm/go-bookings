@@ -17,8 +17,8 @@ var functions = template.FuncMap{}
 var app *config.AppConfig
 var pathToTemplates = "./templates"
 
-// NewTemplate 設置初期化
-func NewTemplate(a *config.AppConfig) {
+// NewRenderer 設置初期化
+func NewRenderer(a *config.AppConfig) {
 	app = a
 }
 
@@ -31,8 +31,8 @@ func AddDefaultData(r *http.Request, td *models.TemplateData) *models.TemplateDa
 	return td
 }
 
-// Execute html/templateを使い、テンプレートファイルをレンダリング
-func Execute(w http.ResponseWriter, r *http.Request, name string, td *models.TemplateData) error {
+// Template html/templateを使い、テンプレートファイルをレンダリング
+func Template(w http.ResponseWriter, r *http.Request, name string, td *models.TemplateData) error {
 	var tc map[string]*template.Template
 
 	if app.UseCache {

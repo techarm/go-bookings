@@ -54,7 +54,7 @@ func getRouters() http.Handler {
 	app.InfoLog = infoLog
 	app.ErrorLog = errorLog
 
-	render.NewTemplate(app)
+	render.NewRenderer(app)
 
 	repo := NewRepository(app, nil)
 	NewHandlers(repo)

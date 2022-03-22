@@ -7,7 +7,7 @@ import (
 )
 
 func TestNewTemplate(t *testing.T) {
-	NewTemplate(app)
+	NewRenderer(app)
 }
 
 func TestAddDefaultData(t *testing.T) {
@@ -44,12 +44,12 @@ func TestExecute(t *testing.T) {
 	var w myWrite
 	var td models.TemplateData
 
-	err = Execute(&w, r, "home.page.tmpl", &td)
+	err = Template(&w, r, "home.page.tmpl", &td)
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = Execute(&w, r, "not-exist.page.tmpl", &td)
+	err = Template(&w, r, "not-exist.page.tmpl", &td)
 	if err == nil {
 		t.Error(err)
 	}
