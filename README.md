@@ -4,10 +4,11 @@ Go言語でWebアプリケーションを作成する
 ## 使用しているライブラリー
 ### GOライブラリー
 - Built in Go version 1.17
-- Uses the [chi router](github.com/go-chi/chi)
+- Uses [chi router](github.com/go-chi/chi)
 - Uses [alex edwards scs session management](github.com/alexedwards/scs)
 - Uses [nosurf](github.com/justinas/nosurf)
 - Uses [govalidator](github.com/asaskevich/govalidator)
+- Use [pgx](github.com/jackc/pgx/v4)
 
 ### CSS Framework
 - Uses [bootstrap](https://getbootstrap.com/) V5.1
