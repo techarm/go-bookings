@@ -46,17 +46,27 @@ func main() {
 // run アプリ起動処理
 func run() (*driver.DB, error) {
 	// セッション情報モデル登録
+	gob.Register(models.User{})
+	gob.Register(models.Room{})
 	gob.Register(models.Reservation{})
+	gob.Register(models.Restriction{})
+	gob.Register(models.RoomRestriction{})
+
+	// setup logger
+	infoLog = log.New(os.Stdout, "[INFO ] ", log.Ldate|log.Ltime)
+	errorLog = log.New(os.Stdout, "[ERROR] ", log.Ldate|log.Ltime|log.Lshortfile)
 
 	app = &config.AppConfig{
 		UseCache:     false,
 		InProduction: false,
+		InfoLog:      infoLog,
+		ErrorLog:     errorLog,
 	}
 
 	// テンプレートのキャッシュマップを作成
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
-		errorLog.Fatal("テンプレートキャッシュが作成できませんでした", err)
+		errorLog.Fatalln("テンプレートキャッシュが作成できませんでした", err)
 		return nil, err
 	}
 	app.TemplateCache = tc
@@ -69,16 +79,10 @@ func run() (*driver.DB, error) {
 	session.Cookie.Secure = app.InProduction
 	app.Session = session
 
-	// setup logger
-	infoLog = log.New(os.Stdout, "[INFO] ", log.Ldate|log.Ltime)
-	errorLog = log.New(os.Stdout, "[ERROR] ", log.Ldate|log.Ltime|log.Lshortfile)
-	app.InfoLog = infoLog
-	app.ErrorLog = errorLog
-
 	// set database
 	infoLog.Println("connecting to database.")
 
-	db, err := driver.ConnectSQL("")
+	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=bookings user=techarm password=")
 	if err != nil {
 		errorLog.Fatalln("can not connect to database.")
 	}

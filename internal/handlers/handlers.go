@@ -11,6 +11,8 @@ import (
 	"github.com/techarm/go-bookings/internal/repository"
 	"github.com/techarm/go-bookings/internal/repository/dbrepo"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 var Repo *Repository
@@ -87,7 +89,12 @@ func (m *Repository) SearchAvailabilityJSON(w http.ResponseWriter, r *http.Reque
 
 // MakeReservation 予約画面の表示処理
 func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
-	var emptyReservation models.Reservation
+	var emptyReservation = models.Reservation{
+		StartDate: time.Now(),
+		EndDate:   time.Now().Add(24 * time.Hour),
+		RoomID:    1,
+	}
+
 	data := make(map[string]interface{})
 	data["reservation"] = emptyReservation
 
@@ -105,16 +112,39 @@ func (m *Repository) PostMakeReservation(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	var dateLayout = "2006/01/02"
+	startDate, err := time.Parse(dateLayout, r.Form.Get("start_date"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	endDate, err := time.Parse(dateLayout, r.Form.Get("start_date"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	roomID, err := strconv.Atoi(r.Form.Get("room_id"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
 	reservation := models.Reservation{
 		FirstName: r.Form.Get("first_name"),
 		LastName:  r.Form.Get("last_name"),
 		Email:     r.Form.Get("email"),
 		Phone:     r.Form.Get("phone"),
+		StartDate: startDate,
+		EndDate:   endDate,
+		RoomID:    roomID,
 	}
 
 	form := forms.New(r.PostForm)
-	form.Required("user_name", "email", "phone_number")
-	form.MinLength("user_name", 3)
+	form.Required("first_name", "last_name", "email", "phone")
+	form.MinLength("first_name", 2)
+	form.MinLength("last_name", 2)
 	form.IsEmail("email")
 
 	if !form.Valid() {
@@ -124,8 +154,31 @@ func (m *Repository) PostMakeReservation(w http.ResponseWriter, r *http.Request)
 			Form: form,
 			Data: data,
 		})
+		m.App.ErrorLog.Printf("Form検証エラー: %v\n", form.Errors)
 		return
 	}
+
+	// 予約データを保存する
+	newReservationID, err := m.DB.InsertReservation(reservation)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+
+	// 予約制限データを保存する
+	var roomRestriction = models.RoomRestriction{
+		StartDate:     startDate,
+		EndDate:       endDate,
+		RoomID:        roomID,
+		ReservationID: newReservationID,
+		RestrictionID: 1,
+	}
+
+	err = m.DB.InsertRoomRestriction(roomRestriction)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+
+	m.App.InfoLog.Printf("予約データを登録しました。予約ID:%d\n", newReservationID)
 
 	m.App.Session.Put(r.Context(), "reservation", reservation)
 	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
