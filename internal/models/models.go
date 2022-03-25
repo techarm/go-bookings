@@ -10,24 +10,24 @@ type User struct {
 	Email       string
 	Password    string
 	AccessLevel int
-	CreateAt    time.Time
-	UpdateAt    time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 // Room roomモデル
 type Room struct {
-	ID       int
-	RoomName string
-	CreateAt time.Time
-	UpdateAt time.Time
+	ID        int
+	RoomName  string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 // Restriction 予約制限モデル
 type Restriction struct {
 	ID              int
 	RestrictionName string
-	CreateAt        time.Time
-	UpdateAt        time.Time
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
 }
 
 // Reservation 予約モデル
@@ -40,8 +40,8 @@ type Reservation struct {
 	StartDate time.Time
 	EndDate   time.Time
 	RoomID    int
-	CreateAt  time.Time
-	UpdateAt  time.Time
+	CreatedAt time.Time
+	UpdatedAt time.Time
 	Room      Room
 }
 
@@ -53,8 +53,8 @@ type RoomRestriction struct {
 	RoomID        int
 	ReservationID int
 	RestrictionID int
-	CreateAt      time.Time
-	UpdateAt      time.Time
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 	Room          Room
 	Reservation   Reservation
 	Restriction   Restriction
