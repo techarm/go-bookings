@@ -55,8 +55,8 @@
                         </div>
                     </div>
                     <input type="hidden" name="room_id" value="{{ $res.RoomID }}">
-                    <input type="hidden" name="start_date" value="{{ $res.StartDate }}">
-                    <input type="hidden" name="end_date" value="{{ $res.EndDate }}">
+                    <input type="hidden" name="start_date" value="{{ $res.StartDate.Format "2006/01/02" }}">
+                    <input type="hidden" name="end_date" value="{{ $res.EndDate.Format "2006/01/02" }}">
                     <input type="hidden" name="csrf_token" value="{{ .CSRFToken }}">
                 </form>
             </div>
