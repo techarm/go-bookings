@@ -126,14 +126,13 @@ func (m *Repository) SearchAvailabilityJSON(w http.ResponseWriter, r *http.Reque
 
 // MakeReservation 予約画面の表示処理
 func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
-	var emptyReservation = models.Reservation{
-		StartDate: time.Now(),
-		EndDate:   time.Now().Add(24 * time.Hour),
-		RoomID:    1,
+	res, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
+	if !ok {
+		helpers.ServerError(w, errors.New("セッション情報から予約情報が取得できませんでした"))
 	}
 
 	data := make(map[string]interface{})
-	data["reservation"] = emptyReservation
+	data["reservation"] = res
 
 	render.Template(w, r, "make-reservation.page.tmpl", &models.TemplateData{
 		Form: forms.New(nil),
