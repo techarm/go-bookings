@@ -3,9 +3,27 @@
     <div class="container">
         <div class="row mt-3">
             <div class="col-md-6 offset-md-3">
-                <h1 class="text-center">予約</h1>
-                <!--needs-validation -->
+                <h2 class="text-center">予約登録</h2>
                 {{ $res := index .Data "reservation" }}
+
+                <table class="table table-borderless mt-3">
+                    <tbody>
+                        <tr>
+                            <th style="width:150px">予約部屋</th>
+                            <td>{{ $res.RoomID }}</td>
+                        </tr>
+                        <tr>
+                            <th>予約開始日</th>
+                            <td>{{ $res.StartDate.Format "2006/01/02" }}</td>
+                        </tr>
+                        <tr>
+                            <th>予約終了日</th>
+                            <td>{{ $res.EndDate.Format "2006/01/02" }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr class="my-4">
+                <!--needs-validation -->
                 <form action="/make-reservation" method="post" class="" novalidate>
                     <div class="mb-3">
                         <label for="last_name" class="form-label">姓</label>
@@ -18,18 +36,6 @@
                         <input type="text" class="form-control {{ with .Form.Errors.Get "first_name" }}is-invalid{{ end }}"
                                id="first_name" name="first_name" autocomplete="off" value="{{$res.FirstName}}" required>
                         <div class="invalid-feedback">{{ .Form.Errors.Get "first_name" }}</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="start_date" class="form-label">開始日付</label>
-                        <input type="text" class="form-control {{ with .Form.Errors.Get "start_date" }}is-invalid{{ end }}"
-                               id="start_date" name="start_date" autocomplete="off" value="{{$res.StartDate.Format "2006/01/02"}}" required>
-                        <div class="invalid-feedback">{{ .Form.Errors.Get "start_date" }}</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="end_date" class="form-label">終了日付</label>
-                        <input type="text" class="form-control {{ with .Form.Errors.Get "end_date" }}is-invalid{{ end }}"
-                               id="end_date" name="end_date" autocomplete="off" value="{{$res.EndDate.Format "2006/01/02"}}" required>
-                        <div class="invalid-feedback">{{ .Form.Errors.Get "end_date" }}</div>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">メールアドレス</label>
@@ -45,10 +51,12 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col text-center">
-                            <button type="submit" class="btn btn-primary px-5">登録</button>
+                            <button type="submit" class="btn btn-primary px-5">予約確定</button>
                         </div>
                     </div>
                     <input type="hidden" name="room_id" value="{{ $res.RoomID }}">
+                    <input type="hidden" name="start_date" value="{{ $res.StartDate }}">
+                    <input type="hidden" name="end_date" value="{{ $res.EndDate }}">
                     <input type="hidden" name="csrf_token" value="{{ .CSRFToken }}">
                 </form>
             </div>

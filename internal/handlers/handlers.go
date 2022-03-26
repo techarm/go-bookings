@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
+	"github.com/go-chi/chi/v5"
 	"github.com/techarm/go-bookings/internal/config"
 	"github.com/techarm/go-bookings/internal/driver"
 	"github.com/techarm/go-bookings/internal/forms"
@@ -62,7 +64,42 @@ func (m *Repository) SearchAvailability(w http.ResponseWriter, r *http.Request) 
 
 // PostSearchAvailability 予約状況検索画面のPOST処理
 func (m *Repository) PostSearchAvailability(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("post data from form"))
+	start := r.Form.Get("start")
+	end := r.Form.Get("end")
+
+	layout := "2006/01/02"
+	startDate, err := time.Parse(layout, start)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+	endDate, err := time.Parse(layout, end)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+
+	rooms, err := m.DB.SearchAvailabilityForAllRooms(startDate, endDate)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+
+	if len(rooms) == 0 {
+		m.App.Session.Put(r.Context(), "error", "指定された期間内で空き状況がありません。")
+		http.Redirect(w, r, "/search-availability", http.StatusSeeOther)
+		return
+	}
+
+	data := make(map[string]interface{})
+	data["rooms"] = rooms
+
+	// 予約開始時間をセッション情報に保存
+	reservation := models.Reservation{
+		StartDate: startDate,
+		EndDate:   endDate,
+	}
+	m.App.Session.Put(r.Context(), "reservation", reservation)
+	render.Template(w, r, "select-room.page.tmpl", &models.TemplateData{
+		Data: data,
+	})
 }
 
 type jsonResponse struct {
@@ -207,4 +244,23 @@ func (m *Repository) ReservationSummary(w http.ResponseWriter, r *http.Request) 
 // Contact 連絡画面の表示処理
 func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
 	render.Template(w, r, "contact.page.tmpl", &models.TemplateData{})
+}
+
+// SelectRoom 部屋選択画面のボタン押下処理
+func (m *Repository) SelectRoom(w http.ResponseWriter, r *http.Request) {
+	roomID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+
+	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
+	if !ok {
+		helpers.ServerError(w, errors.New("セッション情報取得失敗"))
+		return
+	}
+
+	// 選択されたRoomIDをセッションに設定する
+	reservation.RoomID = roomID
+	m.App.Session.Put(r.Context(), "reservation", reservation)
+	http.Redirect(w, r, "/make-reservation", http.StatusSeeOther)
 }

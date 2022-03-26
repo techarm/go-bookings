@@ -23,6 +23,7 @@ func routers(app *config.AppConfig) http.Handler {
 	mux.Get("/search-availability", handlers.Repo.SearchAvailability)
 	mux.Post("/search-availability", handlers.Repo.PostSearchAvailability)
 	mux.Post("/search-availability-json", handlers.Repo.SearchAvailabilityJSON)
+	mux.Get("/select-room/{id}", handlers.Repo.SelectRoom)
 
 	mux.Get("/make-reservation", handlers.Repo.MakeReservation)
 	mux.Post("/make-reservation", handlers.Repo.PostMakeReservation)
