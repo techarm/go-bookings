@@ -78,7 +78,7 @@ func (m postgresDBRepo) SearchAvailabilityForAllRooms(start, end time.Time) ([]m
 
 	stmt := `
 		select
-			r.id ,
+			r.id,
 			r.room_name
 		from
 			rooms r
@@ -120,7 +120,7 @@ func (m postgresDBRepo) GetRoomById(id int) (models.Room, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	stmt := `select id, room_name, created_at, updated_at where id = $1`
+	stmt := `select id, room_name, created_at, updated_at from rooms where id = $1`
 	row := m.DB.QueryRowContext(ctx, stmt, id)
 
 	var room models.Room

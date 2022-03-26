@@ -131,6 +131,13 @@ func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
 		helpers.ServerError(w, errors.New("セッション情報から予約情報が取得できませんでした"))
 	}
 
+	// RoomIDでRoom情報を取得
+	room, err := m.DB.GetRoomById(res.RoomID)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+	res.Room = room
+
 	data := make(map[string]interface{})
 	data["reservation"] = res
 
