@@ -8,7 +8,7 @@ Go言語でWebアプリケーションを作成する
 - Uses [alex edwards scs session management](github.com/alexedwards/scs)
 - Uses [nosurf](github.com/justinas/nosurf)
 - Uses [govalidator](github.com/asaskevich/govalidator)
-- Use [pgx](github.com/jackc/pgx/v4)
+- Uses [pgx](github.com/jackc/pgx/v4)
 
 ### CSS Framework
 - Uses [bootstrap](https://getbootstrap.com/) V5.1
