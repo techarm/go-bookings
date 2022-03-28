@@ -141,6 +141,7 @@ func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 	data["reservation"] = res
 
+	m.App.Session.Put(r.Context(), "reservation", res)
 	render.Template(w, r, "make-reservation.page.tmpl", &models.TemplateData{
 		Form: forms.New(nil),
 		Data: data,
@@ -149,26 +150,12 @@ func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
 
 // PostMakeReservation 予約画面の登録処理
 func (m *Repository) PostMakeReservation(w http.ResponseWriter, r *http.Request) {
+	res, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
+	if !ok {
+		helpers.ServerError(w, errors.New("セッション情報から予約情報が取得できませんでした"))
+	}
+
 	err := r.ParseForm()
-	if err != nil {
-		helpers.ServerError(w, err)
-		return
-	}
-
-	var dateLayout = "2006/01/02"
-	startDate, err := time.Parse(dateLayout, r.Form.Get("start_date"))
-	if err != nil {
-		helpers.ServerError(w, err)
-		return
-	}
-
-	endDate, err := time.Parse(dateLayout, r.Form.Get("start_date"))
-	if err != nil {
-		helpers.ServerError(w, err)
-		return
-	}
-
-	roomID, err := strconv.Atoi(r.Form.Get("room_id"))
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
@@ -179,9 +166,10 @@ func (m *Repository) PostMakeReservation(w http.ResponseWriter, r *http.Request)
 		LastName:  r.Form.Get("last_name"),
 		Email:     r.Form.Get("email"),
 		Phone:     r.Form.Get("phone"),
-		StartDate: startDate,
-		EndDate:   endDate,
-		RoomID:    roomID,
+		StartDate: res.StartDate,
+		EndDate:   res.EndDate,
+		RoomID:    res.RoomID,
+		Room:      res.Room,
 	}
 
 	form := forms.New(r.PostForm)
@@ -209,9 +197,9 @@ func (m *Repository) PostMakeReservation(w http.ResponseWriter, r *http.Request)
 
 	// 予約制限データを保存する
 	var roomRestriction = models.RoomRestriction{
-		StartDate:     startDate,
-		EndDate:       endDate,
-		RoomID:        roomID,
+		StartDate:     res.StartDate,
+		EndDate:       res.EndDate,
+		RoomID:        res.RoomID,
 		ReservationID: newReservationID,
 		RestrictionID: 1,
 	}

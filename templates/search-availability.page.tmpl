@@ -4,7 +4,7 @@
         <div class="row mt-5">
             <div class="col-md-6 offset-md-3">
                 <h1 class="mb-3">現在予約の空き状況確認</h1>
-                <form action="/search-availability" method="post" class="needs-validation" novalidate>
+                <form action="/search-availability" method="post" autocomplete="off" class="needs-validation" novalidate>
                     <div class="row mb-3" id="reservation-date">
                         <div class="col">
                             <input type="text" class="form-control" id="start-date" name="start" placeholder="開始日" required>
@@ -29,21 +29,8 @@
     const elem = document.getElementById('reservation-date');
     const rangepicker = new DateRangePicker(elem, {
         format: "yyyy/mm/dd",
+        minDate: new Date(),
         language: "ja"
     });
-
-    // let searchBtn = document.getElementById("search");
-    // searchBtn.addEventListener("click", function (event) {
-    //     // notie.alert({
-    //     //     type: "success",
-    //     //     text: "hello javascript"
-    //     // });
-    //     Swal.fire({
-    //         icon: 'success',
-    //         title: 'Oops...',
-    //         text: 'Something went wrong!',
-    //         confirmButtonText: "確定"
-    //     })
-    // })
 </script>
 {{ end }}
