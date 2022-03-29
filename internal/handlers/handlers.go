@@ -292,3 +292,43 @@ func (m *Repository) SelectRoom(w http.ResponseWriter, r *http.Request) {
 	m.App.Session.Put(r.Context(), "reservation", reservation)
 	http.Redirect(w, r, "/make-reservation", http.StatusSeeOther)
 }
+
+// BookRoom 部屋予約処理
+func (m *Repository) BookRoom(w http.ResponseWriter, r *http.Request) {
+	roomID, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+
+	layout := "2006-01-02"
+	start := r.URL.Query().Get("s")
+	end := r.URL.Query().Get("e")
+
+	startDate, err := time.Parse(layout, start)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	endDate, err := time.Parse(layout, end)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	room, err := m.DB.GetRoomById(roomID)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+
+	// 予約予約をセッション情報に保存
+	reservation := models.Reservation{
+		RoomID:    roomID,
+		StartDate: startDate,
+		EndDate:   endDate,
+		Room:      room,
+	}
+
+	m.App.Session.Put(r.Context(), "reservation", reservation)
+	http.Redirect(w, r, "make-reservation", http.StatusSeeOther)
+}

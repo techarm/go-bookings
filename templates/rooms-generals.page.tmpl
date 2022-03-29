@@ -24,77 +24,8 @@
     </div>
     <div class="row">
         <div class="col text-center">
-            <button type="button" id="check-availability-button" class="btn btn-success">予約状態確認</button>
+            <button type="button" class="btn btn-success" onclick="roomBookConfirm('1')">予約状態確認</button>
         </div>
     </div>
 </div>
-{{ end }}
-
-{{ define "javascript" }}
-    <script>
-        let attention = new Prompt();
-        document.getElementById("check-availability-button").addEventListener("click", function () {
-            let html = `
-                <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
-                    <div id="reservation-dates-modal" class="d-flex content-justify-center p-1">
-                       <div class="col-5">
-                            <input type="text" name="start" id="start" class="form-control" placeholder="開始日" required autocomplete="off">
-                        </div>
-                        <div class="col-2">〜</div>
-                        <div class="col-5">
-                            <input type="text" name="end" id="end" class="form-control" placeholder="終了日" required autocomplete="off">
-                        </div>
-                    </div>
-                </form>
-                `;
-            attention.custom({
-                title: '日付を選択してください',
-                msg: html,
-                didOpen: () => {
-                    const elem = document.getElementById("reservation-dates-modal");
-                    const rangepicker = new DateRangePicker(elem, {
-                        format: "yyyy-mm-dd",
-                        language: "ja",
-                        minDate: new Date(),
-                        orientation: "auto top",
-                        showOnFocus: false,
-                    });
-                },
-                callback: function(result) {
-                    if (result) {
-                        let form = document.getElementById("check-availability-form");
-                        let formData = new FormData(form);
-                        formData.append("csrf_token", '{{.CSRFToken}}');
-                        formData.append("room_id", "1")
-
-                        fetch('/search-availability-json', {
-                            method: "post",
-                            body: formData,
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data)
-                            if (data.ok) {
-                                attention.custom({
-                                    icon: "success",
-                                    title: "空きがあります",
-                                    confirmButtonText: "今すぐ予約",
-                                    callback: function (result) {
-                                        if (result) {
-                                            window.location.href = `/book-room?id=${data.room_id}&s=${data.start_date}&e=${data.end_date}`
-                                        }
-                                    }
-                                });
-                            } else {
-                                attention.error({
-                                    title: "空きがありません",
-                                    msg: "期間を調整して再度検索してください"
-                                });
-                            }
-                        });
-                    }
-                }
-            });
-        })
-    </script>
 {{ end }}

@@ -149,3 +149,68 @@ function Prompt() {
         custom: custom,
     }
 }
+
+function roomBookConfirm(roomId) {
+    let attention = new Prompt();
+    let html = `
+            <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
+                <div id="reservation-dates-modal" class="d-flex content-justify-center p-1">
+                   <div class="col-5">
+                        <input type="text" name="start" id="start" class="form-control" placeholder="開始日" required autocomplete="off">
+                    </div>
+                    <div class="col-2">〜</div>
+                    <div class="col-5">
+                        <input type="text" name="end" id="end" class="form-control" placeholder="終了日" required autocomplete="off">
+                    </div>
+                </div>
+            </form>
+            `;
+    attention.custom({
+        title: '日付を選択してください',
+        msg: html,
+        didOpen: () => {
+            const elem = document.getElementById("reservation-dates-modal");
+            const rangepicker = new DateRangePicker(elem, {
+                format: "yyyy-mm-dd",
+                language: "ja",
+                minDate: new Date(),
+                orientation: "auto top",
+                showOnFocus: false,
+            });
+        },
+        callback: function(result) {
+            if (result) {
+                let form = document.getElementById("check-availability-form");
+                let formData = new FormData(form);
+                formData.append("csrf_token", document.getElementById("csrf_token").value);
+                formData.append("room_id", roomId)
+                console.log(roomId);
+                fetch('/search-availability-json', {
+                    method: "post",
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                        if (data.ok) {
+                            attention.custom({
+                                icon: "success",
+                                title: "空きがあります",
+                                confirmButtonText: "今すぐ予約",
+                                callback: function (result) {
+                                    if (result) {
+                                        window.location.href = `/book-room?id=${data.room_id}&s=${data.start_date}&e=${data.end_date}`
+                                    }
+                                }
+                            });
+                        } else {
+                            attention.error({
+                                title: "空きがありません",
+                                msg: "期間を調整して再度検索してください"
+                            });
+                        }
+                    });
+            }
+        }
+    });
+}
