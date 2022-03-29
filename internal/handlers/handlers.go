@@ -67,7 +67,7 @@ func (m *Repository) PostSearchAvailability(w http.ResponseWriter, r *http.Reque
 	start := r.Form.Get("start")
 	end := r.Form.Get("end")
 
-	layout := "2006/01/02"
+	layout := "2006-01-02"
 	startDate, err := time.Parse(layout, start)
 	if err != nil {
 		helpers.ServerError(w, err)
@@ -103,15 +103,49 @@ func (m *Repository) PostSearchAvailability(w http.ResponseWriter, r *http.Reque
 }
 
 type jsonResponse struct {
-	OK      bool   `json:"ok"`
-	Message string `json:"message"`
+	OK        bool   `json:"ok"`
+	RoomID    int    `json:"room_id"`
+	StartDate string `json:"start_date"`
+	EndDate   string `json:"end_date"`
+	Message   string `json:"message"`
 }
 
 // SearchAvailabilityJSON 予約状況検索画面のAPI処理
 func (m *Repository) SearchAvailabilityJSON(w http.ResponseWriter, r *http.Request) {
+	layout := "2006-01-02"
+	start := r.Form.Get("start")
+	end := r.Form.Get("end")
+
+	startDate, err := time.Parse(layout, start)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	endDate, err := time.Parse(layout, end)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	roomID, err := strconv.Atoi(r.Form.Get("room_id"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	available, err := m.DB.SearchRoomAvailabilityByDates(roomID, startDate, endDate)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
 	response := &jsonResponse{
-		OK:      false,
-		Message: "Available!",
+		OK:        available,
+		RoomID:    roomID,
+		StartDate: start,
+		EndDate:   end,
+		Message:   "",
 	}
 
 	jsonText, err := json.MarshalIndent(response, "", "    ")

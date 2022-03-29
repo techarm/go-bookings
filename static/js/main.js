@@ -69,6 +69,7 @@ function Prompt() {
             title: title,
             text: msg,
             footer: footer,
+            confirmButtonColor: "#3085d6",
         })
 
     }
@@ -85,23 +86,30 @@ function Prompt() {
             title: title,
             text: msg,
             footer: footer,
+            confirmButtonColor: "#3085d6",
         })
 
     }
 
     async function custom(c) {
+        console.log(c);
         const {
+            icon = "",
             msg = "",
             title = "",
-        } = c;
-
+            confirmButtonText = "確定",
+            cancelButtonText = "キャンセル"
+        } = c
         const { value: result } = await Swal.fire({
+            icon: icon,
             title: title,
             html: msg,
             backdrop: false,
             focusConfirm: false,
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
+            confirmButtonText: confirmButtonText,
+            cancelButtonText: cancelButtonText,
             willOpen: () => {
                 if (c.willOpen !== undefined) {
                     c.willOpen();
@@ -113,10 +121,9 @@ function Prompt() {
                 }
             },
             preConfirm: () => {
-                return [
-                    document.getElementById('start').value,
-                    document.getElementById('end').value
-                ]
+                if (c.preConfirm !== undefined){
+                    c.preConfirm();
+                }
             }
         })
 
