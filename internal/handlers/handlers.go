@@ -32,6 +32,14 @@ func NewRepository(a *config.AppConfig, d *driver.DB) *Repository {
 	}
 }
 
+// NewTestRepository テスト用のリポジトリ
+func NewTestRepository(a *config.AppConfig) *Repository {
+	return &Repository{
+		App: a,
+		DB:  dbrepo.NewTestRepo(a),
+	}
+}
+
 // NewHandlers 初期化処理
 func NewHandlers(r *Repository) {
 	Repo = r
@@ -162,13 +170,15 @@ func (m *Repository) SearchAvailabilityJSON(w http.ResponseWriter, r *http.Reque
 func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
 	res, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
-		helpers.ServerError(w, errors.New("セッション情報から予約情報が取得できませんでした"))
+		helpers.SystemErrorAndRedirectToRoot(w, r)
+		return
 	}
 
 	// RoomIDでRoom情報を取得
 	room, err := m.DB.GetRoomById(res.RoomID)
 	if err != nil {
-		helpers.ServerError(w, err)
+		helpers.SystemErrorAndRedirectToRoot(w, r, err)
+		return
 	}
 	res.Room = room
 

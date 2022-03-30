@@ -53,7 +53,7 @@ func run() (*driver.DB, error) {
 	gob.Register(models.RoomRestriction{})
 
 	// setup logger
-	infoLog = log.New(os.Stdout, "[INFO ] ", log.Ldate|log.Ltime)
+	infoLog = log.New(os.Stdout, "[INFO ] ", log.Ldate|log.Ltime|log.Lshortfile)
 	errorLog = log.New(os.Stdout, "[ERROR] ", log.Ldate|log.Ltime|log.Lshortfile)
 
 	app = &config.AppConfig{

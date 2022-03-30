@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"testing"
 	"time"
 )
 
@@ -24,7 +25,7 @@ var session *scs.SessionManager
 var pathToTemplates = "./../../templates"
 var functions = template.FuncMap{}
 
-func getRouters() http.Handler {
+func TestMain(m *testing.M) {
 	// セッション情報モデル登録
 	gob.Register(models.Reservation{})
 
@@ -56,11 +57,15 @@ func getRouters() http.Handler {
 
 	render.NewRenderer(app)
 
-	repo := NewRepository(app, nil)
+	repo := NewTestRepository(app)
 	NewHandlers(repo)
 
 	helpers.NewHelpers(app)
 
+	os.Exit(m.Run())
+}
+
+func getRouters() http.Handler {
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer)
 	//mux.Use(CSRFToken)
